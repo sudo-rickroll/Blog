@@ -1,0 +1,35 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "MERN Stack Blog App",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudo-rickroll/Blog.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "Rangasai K R",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudo-rickroll/Blog/issues"
+  },
+  "homepage": "https://github.com/sudo-rickroll/Blog#readme",
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "nodemon": "^2.0.14"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.11"
+  }
+}
