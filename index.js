@@ -1,8 +1,12 @@
-const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
+
+if (process.argv.length < 2){
+    console.log("Command should contain mongo URL")
+    process.exit(1)
+}
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -11,10 +15,16 @@ const blogSchema = new mongoose.Schema({
   likes: Number
 })
 
+blogSchema.set('toJSON', { transform: (sent, received) => {
+    received.id = received._id.toString()
+    delete received._id
+    delete received.__v
+}
+})
+
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
-mongoose.connect(mongoUrl)
+mongoose.connect(process.argv[3] || process.argv[2])
 
 app.use(cors())
 app.use(express.json())
