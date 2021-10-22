@@ -1,4 +1,5 @@
-const dummy = require('../utils/list_helper').totalLikes
+const totalLikes = require('../utils/list_helper').totalLikes
+const favouriteBlog = require('../utils/list_helper').favouriteBlog
 
 describe('Likes', () => {
   const blogs = [{
@@ -7,12 +8,20 @@ describe('Likes', () => {
     url: 'abc.com',
     likes: 5
   }, {
-    title: 'First Blog',
+    title: 'Second Blog',
     author: 'Rangasai K R',
     url: 'abc.com',
-    likes: 5
+    likes: 10
   }]
   test('Total Likes', () => {
-    expect(dummy(blogs)).toBe(10)
+    expect(totalLikes(blogs)).toBe(15)
+  })
+  test('Favourite Blog', () => {
+    expect(favouriteBlog(blogs)).toEqual({
+      title: 'Second Blog',
+      author: 'Rangasai K R',
+      url: 'abc.com',
+      likes: 10
+    })
   })
 })
