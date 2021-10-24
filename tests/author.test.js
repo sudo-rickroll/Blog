@@ -1,4 +1,4 @@
-const mostBlogs = require('../utils/list_helper').mostBlogs
+const { mostBlogs, mostLikes } = require('../utils/list_helper')
 
 const blogs = [
   {
@@ -56,6 +56,12 @@ describe('Authors with', () => {
     expect(mostBlogs(blogs)).toEqual({
       author: 'Robert C. Martin',
       blogs: 3
+    })
+  })
+  test('Most Likes', () => {
+    expect(mostLikes(blogs)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17
     })
   })
 })
