@@ -5,7 +5,7 @@ router.get('/', (request, response, next) => {
   Blog
     .find({})
     .then(blogs => {
-      response.json(blogs)
+      response.send(blogs)
     })
     .catch(error => {
       next(error)
@@ -18,7 +18,7 @@ router.post('/', (request, response, next) => {
   blog
     .save()
     .then(result => {
-      response.status(201).json(result)
+      response.status(201).send(result)
     })
     .catch(error => {
       next(error)
