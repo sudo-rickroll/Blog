@@ -20,16 +20,54 @@ const blogs = [{
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(blogs[0])
-  await blogObject.save()
-  blogObject = new Blog(blogs[1])
-  await blogObject.save()
+  for (let blog of blogs){
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+  }
 })
 
 describe('GET API Calls', () => {
   test('get all items array length', async () => {
     const blogsArray = await api.get('/api/blogs')
     expect(blogsArray.body).toHaveLength(blogs.length)
+  })
+  test('check if id exists', async () => {
+    const blogsArray = await api.get('/api/blogs')
+    blogsArray.body.forEach(blog => {
+      expect(blog.id).toBeDefined()
+    })
+  })
+})
+
+describe('POST API Calls', () => {
+  test('create a blog', async () => {
+    const blogObject = {
+      title: 'Third Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com',
+      likes: 1000000
+    }
+    await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
+    const blogArray = await api.get('/api/blogs')
+    expect(blogArray.body).toHaveLength(blogs.length + 1)
+    expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
+  })
+  test('check default likes count', async () => {
+    const blogObject = {
+      title: 'Third Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com'
+    }
+    await api.post('/api/blogs').send(blogObject)
+    const blogArray = await api.get('/api/blogs')
+    expect(blogArray.body[2].likes).toBe(0)
+  })
+  test('check missing properties', async () => {
+    const blogObject = {
+      author: 'Anonymous',
+      likes: 1000000
+    }
+    await api.post('/api/blogs').send(blogObject).expect(400)
   })
 })
 
