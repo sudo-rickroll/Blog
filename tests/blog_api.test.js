@@ -44,13 +44,30 @@ describe('POST API Calls', () => {
     const blogObject = {
       title: 'Third Blog',
       author: 'William Shakespeare',
-      url: 'theethythou.com'
+      url: 'theethythou.com',
+      likes: 1000000
     }
     await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
     const blogArray = await api.get('/api/blogs')
     expect(blogArray.body).toHaveLength(blogs.length + 1)
     expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
+  })
+  test('check default likes count', async () => {
+    const blogObject = {
+      title: 'Third Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com'
+    }
+    await api.post('/api/blogs').send(blogObject)
+    const blogArray = await api.get('/api/blogs')
     expect(blogArray.body[2].likes).toBe(0)
+  })
+  test('check missing properties', async () => {
+    const blogObject = {
+      author: 'Anonymous',
+      likes: 1000000
+    }
+    await api.post('/api/blogs').send(blogObject).expect(400)
   })
 })
 
