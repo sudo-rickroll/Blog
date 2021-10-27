@@ -39,6 +39,21 @@ describe('GET API Calls', () => {
   })
 })
 
+describe('POST API Calls', () => {
+  test('create a blog', async () => {
+    const blogObject = {
+      title: 'Third Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com',
+      likes: 100000
+    }
+    await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
+    const blogArray = await api.get('/api/blogs')
+    expect(blogArray.body).toHaveLength(blogs.length + 1)
+    expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
