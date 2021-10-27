@@ -44,13 +44,13 @@ describe('POST API Calls', () => {
     const blogObject = {
       title: 'Third Blog',
       author: 'William Shakespeare',
-      url: 'theethythou.com',
-      likes: 100000
+      url: 'theethythou.com'
     }
     await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
     const blogArray = await api.get('/api/blogs')
     expect(blogArray.body).toHaveLength(blogs.length + 1)
     expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
+    expect(blogArray.body[2].likes).toBe(0)
   })
 })
 
