@@ -5,8 +5,11 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "title": "First Blog",
+  "title": "Blog",
   "author": "Rangasai K R",
   "url": "abc.com",
   "likes": 5
 }
+
+###
+DELETE http://localhost:3003/api/blogs/617a73ce40a70f31c28f5ab9
