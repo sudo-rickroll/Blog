@@ -87,6 +87,19 @@ describe('DELETE API Calls', () => {
   })
 })
 
+describe('PUT API Calls', () => {
+  test('check blog update', async () => {
+    const existingBlog = await Blog.findOne()
+    const newBlog = {
+      ...existingBlog.toJSON(),
+      likes: 155
+    }
+    const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
+    expect(updatedBlog.body).toEqual(newBlog)
+
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
