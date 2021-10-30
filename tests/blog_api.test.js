@@ -37,6 +37,12 @@ describe('GET API Calls', () => {
       expect(blog.id).toBeDefined()
     })
   })
+  test('check specific blog', async () => {
+    const blogsArrayFromDB = await Blog.find({})
+    const blogsArray = await api.get(`/api/blogs/${blogsArrayFromDB[0].id}`)
+    expect(blogsArray.body).toEqual(JSON.parse(JSON.stringify(blogsArrayFromDB[0])))
+
+  })
 })
 
 describe('POST API Calls', () => {
@@ -68,6 +74,29 @@ describe('POST API Calls', () => {
       likes: 1000000
     }
     await api.post('/api/blogs').send(blogObject).expect(400)
+  })
+})
+
+describe('DELETE API Calls', () => {
+  test('delete an item by ID', async () => {
+    const blogs = await Blog.find({})
+    const id = blogs[0].id
+    const deletedItem = await api.delete(`/api/blogs/${id}`).expect(200)
+    expect(deletedItem.body).toEqual(JSON.parse(JSON.stringify(blogs[0])))
+    await api.delete(`/api/blogs/${id}`).expect(404)
+  })
+})
+
+describe('PUT API Calls', () => {
+  test('check blog update', async () => {
+    const existingBlog = await Blog.findOne()
+    const newBlog = {
+      ...existingBlog.toJSON(),
+      likes: 155
+    }
+    const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
+    expect(updatedBlog.body).toEqual(newBlog)
+
   })
 })
 
