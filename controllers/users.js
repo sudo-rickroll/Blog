@@ -3,12 +3,16 @@ const bcryptjs = require('bcryptjs')
 const user = require('../models/user')
 
 router.post('/', async (request, response) => {
-  const { username, name, password } = request.body
+  if (!(request.body.username && request.body.password) || request.body.password.length < 3){
+    return response.status(401).send({
+      error: 'Username and Password must be provided and both must be atlest 3 characters long'
+    })
+  }
   const saltRounds = 10
-  const passwordHash = await bcryptjs.hash(password, saltRounds)
+  const passwordHash = await bcryptjs.hash(request.body.password, saltRounds)
   const userObject = new user({
-    username,
-    name,
+    username: request.body.username,
+    name: request.body.name,
     passwordHash
   })
   const savedUser = await userObject.save()

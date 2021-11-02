@@ -121,6 +121,30 @@ describe('User POST API Calls', () => {
     const savedUser = await api.post('/api/users').send(userObject).expect(200)
     expect(savedUser.body).toHaveProperty('id')
   })
+  test('username and password is mandatory and > 3 characters', async () => {
+    const userObject1 = {
+      name: 'Anonymous 2',
+      password: 'anon02'
+    }
+    const userObject2 = {
+      username: 'anonymous2',
+      name: 'Anonymous 2'
+    }
+    const userObject3 = {
+      username: 'an',
+      name: 'Anonymous 2',
+      password: 'anon02'
+    }
+    const userObject4 = {
+      username: 'anonymous2',
+      name: 'Anonymous 2',
+      password: 'an'
+    }
+    await api.post('/api/users').send(userObject1).expect(401)
+    await api.post('/api/users').send(userObject2).expect(401)
+    await api.post('/api/users').send(userObject3).expect(401)
+    await api.post('/api/users').send(userObject4).expect(401)
+  })
 })
 
 afterAll(() => {

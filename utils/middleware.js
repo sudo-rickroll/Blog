@@ -12,6 +12,9 @@ const errorHandler = (error, request, response, next) => {
   else if (error.name === 'ValidationError'){
     response.status(400).send(error.message)
   }
+  else if (error.name === 'UserCreationValidation'){
+    response.status(401).send(error.message).end()
+  }
   else{
     response.send(500).end()
   }

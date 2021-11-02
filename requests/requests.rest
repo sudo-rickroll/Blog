@@ -21,5 +21,5 @@ Content-Type: application/json
 {
   "username": "anonymous",
   "name": "Anonymous",
-  "password": "anon1234"
+  "password": "ansdfgg"
 }
