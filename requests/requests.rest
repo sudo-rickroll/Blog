@@ -13,3 +13,13 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:3003/api/blogs/617a73ce40a70f31c28f5ab9
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "anonymous",
+  "name": "Anonymous",
+  "password": "anon1234"
+}
