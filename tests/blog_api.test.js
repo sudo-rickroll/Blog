@@ -1,5 +1,6 @@
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
 const mongoose = require('mongoose')
 
@@ -18,15 +19,25 @@ const blogs = [{
   likes: 10
 }]
 
+const users = [{
+  username: 'anonymous',
+  name: 'Anonymous',
+  password: 'anon1234'
+},
+{
+  username: 'rangasai',
+  name: 'Rangasai K R',
+  password: 'rangasai0'
+}]
+
 beforeEach(async () => {
   await Blog.deleteMany({})
-  for (let blog of blogs){
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
+  await Blog.insertMany(blogs)
+  await User.deleteMany({})
+  await User.insertMany(users)
 })
 
-describe('GET API Calls', () => {
+describe('Blog GET API Calls', () => {
   test('get all items array length', async () => {
     const blogsArray = await api.get('/api/blogs')
     expect(blogsArray.body).toHaveLength(blogs.length)
@@ -45,7 +56,7 @@ describe('GET API Calls', () => {
   })
 })
 
-describe('POST API Calls', () => {
+describe('Blog POST API Calls', () => {
   test('create a blog', async () => {
     const blogObject = {
       title: 'Third Blog',
@@ -77,7 +88,7 @@ describe('POST API Calls', () => {
   })
 })
 
-describe('DELETE API Calls', () => {
+describe('Blog DELETE API Calls', () => {
   test('delete an item by ID', async () => {
     const blogs = await Blog.find({})
     const id = blogs[0].id
@@ -87,7 +98,7 @@ describe('DELETE API Calls', () => {
   })
 })
 
-describe('PUT API Calls', () => {
+describe('Blog PUT API Calls', () => {
   test('check blog update', async () => {
     const existingBlog = await Blog.findOne()
     const newBlog = {
@@ -97,6 +108,18 @@ describe('PUT API Calls', () => {
     const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
     expect(updatedBlog.body).toEqual(newBlog)
 
+  })
+})
+
+describe('User POST API Calls', () => {
+  test('add a user', async () => {
+    const userObject = {
+      username: 'anonymous2',
+      name: 'Anonymous 2',
+      password: 'anon02'
+    }
+    const savedUser = await api.post('/api/users').send(userObject).expect(200)
+    expect(savedUser.body).toHaveProperty('id')
   })
 })
 
