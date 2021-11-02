@@ -6,8 +6,8 @@ const blogSchema = new mongoose.Schema({
     required: true
   },
   author: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   },
   url: {
     type: String,
@@ -26,4 +26,6 @@ blogSchema.set('toJSON', { transform : (sent, received) => {
 }
 })
 
-module.exports = mongoose.model('Blog', blogSchema)
+const Blog = mongoose.model('Blog', blogSchema)
+
+module.exports = Blog
