@@ -1,5 +1,6 @@
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
 const mongoose = require('mongoose')
 const helper = require('../utils/helper')
@@ -82,6 +83,23 @@ describe('Blog PUT API Calls', () => {
     const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
     expect(updatedBlog.body).toEqual(newBlog)
 
+  })
+})
+
+describe('Populate user object in blogs', () => {
+  test('reference object populated', async () => {
+    await helper.deleteAllRecords(User)
+    await helper.insertAllRecords(User, helper.users)
+    const fetchedUser = await User.findOne()
+    const blogObject = {
+      title: 'Reference Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com',
+      user: fetchedUser._id.toString()
+    }
+    const savedBlog = await api.post('/api/blogs').send(blogObject).expect(201)
+    const fetchedBlog = await api.get(`/api/blogs/${savedBlog.body.id}`)
+    expect(fetchedUser).toMatchObject(fetchedBlog.body.user)
   })
 })
 

@@ -8,7 +8,7 @@ Content-Type: application/json
   "title": "Blog",
   "author": "Rangasai K R",
   "url": "abc.com",
-  "likes": 5
+  "user": "6182605500405cd48109c18a"
 }
 
 ###
@@ -23,3 +23,6 @@ Content-Type: application/json
   "name": "Anonymous",
   "password": "ansdfgg"
 }
+
+###
+GET http://localhost:3003/api/users

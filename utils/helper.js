@@ -14,12 +14,12 @@ const blogs = [{
 const users = [{
   username: 'anonymous',
   name: 'Anonymous',
-  password: 'anon1234'
+  passwordHash: 'anon1234'
 },
 {
   username: 'rangasai',
   name: 'Rangasai K R',
-  password: 'rangasai0'
+  passwordHash: 'rangasai0'
 }]
 
 const deleteAllRecords = async object => {
