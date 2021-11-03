@@ -8,8 +8,10 @@ if (process.env.NODE_ENV === 'test'){
 else{
   URL = process.env.MONGODB_URI
 }
+const SECRET_KEY = process.env.SECRET_KEY
 
 module.exports = {
   PORT,
-  URL
+  URL,
+  SECRET_KEY
 }
