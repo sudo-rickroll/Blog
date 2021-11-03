@@ -1,46 +1,20 @@
 const supertest = require('supertest')
 const Blog = require('../models/blog')
-const User = require('../models/user')
 const app = require('../app')
 const mongoose = require('mongoose')
-
+const helper = require('../utils/helper')
 const api = supertest(app)
 
-const blogs = [{
-  title: 'First Blog',
-  author: 'Rangasai K R',
-  url: 'abc.com',
-  likes: 5
-},
-{
-  title: 'Second Blog',
-  author: 'Rangasai K R',
-  url: 'abc.com',
-  likes: 10
-}]
-
-const users = [{
-  username: 'anonymous',
-  name: 'Anonymous',
-  password: 'anon1234'
-},
-{
-  username: 'rangasai',
-  name: 'Rangasai K R',
-  password: 'rangasai0'
-}]
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(blogs)
-  await User.deleteMany({})
-  await User.insertMany(users)
+  await helper.deleteAllRecords(Blog)
+  await helper.insertAllRecords(Blog, helper.blogs)
 })
 
 describe('Blog GET API Calls', () => {
   test('get all items array length', async () => {
     const blogsArray = await api.get('/api/blogs')
-    expect(blogsArray.body).toHaveLength(blogs.length)
+    expect(blogsArray.body).toHaveLength(helper.blogs.length)
   })
   test('check if id exists', async () => {
     const blogsArray = await api.get('/api/blogs')
@@ -66,7 +40,7 @@ describe('Blog POST API Calls', () => {
     }
     await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
     const blogArray = await api.get('/api/blogs')
-    expect(blogArray.body).toHaveLength(blogs.length + 1)
+    expect(blogArray.body).toHaveLength(helper.blogs.length + 1)
     expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
   })
   test('check default likes count', async () => {
@@ -108,42 +82,6 @@ describe('Blog PUT API Calls', () => {
     const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
     expect(updatedBlog.body).toEqual(newBlog)
 
-  })
-})
-
-describe('User POST API Calls', () => {
-  test('add a user', async () => {
-    const userObject = {
-      username: 'anonymous2',
-      name: 'Anonymous 2',
-      password: 'anon02'
-    }
-    const savedUser = await api.post('/api/users').send(userObject).expect(200)
-    expect(savedUser.body).toHaveProperty('id')
-  })
-  test('username and password is mandatory and > 3 characters', async () => {
-    const userObject1 = {
-      name: 'Anonymous 2',
-      password: 'anon02'
-    }
-    const userObject2 = {
-      username: 'anonymous2',
-      name: 'Anonymous 2'
-    }
-    const userObject3 = {
-      username: 'an',
-      name: 'Anonymous 2',
-      password: 'anon02'
-    }
-    const userObject4 = {
-      username: 'anonymous2',
-      name: 'Anonymous 2',
-      password: 'an'
-    }
-    await api.post('/api/users').send(userObject1).expect(401)
-    await api.post('/api/users').send(userObject2).expect(401)
-    await api.post('/api/users').send(userObject3).expect(401)
-    await api.post('/api/users').send(userObject4).expect(401)
   })
 })
 
