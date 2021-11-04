@@ -10,13 +10,15 @@ const userObject = {
   password: 'ansdfgg'
 }
 
+let savedUser = {}
+
 beforeEach(async () => {
   await User.deleteMany({})
+  savedUser = await api.post('/api/users').send(userObject)
 })
 
 describe('User Login POST call', () => {
   test('Correct Login', async () => {
-    const savedUser = await api.post('/api/users').send(userObject)
     const userLoginObject = {
       username: 'anonymous',
       password: 'ansdfgg'
@@ -24,10 +26,8 @@ describe('User Login POST call', () => {
     const loggedInUser = await api.post('/api/login').send(userLoginObject).expect(200)
     expect(loggedInUser.body).toHaveProperty('token')
     expect(loggedInUser.body.username).toBe(savedUser.body.username)
-    await User.findByIdAndDelete(savedUser.body.id)
   })
   test('Incorrect Login', async () => {
-    const savedUser = await api.post('/api/users').send(userObject)
     const userLoginObject1 = {
       username: 'anonymous',
       password: 'ansdfg'
@@ -42,8 +42,6 @@ describe('User Login POST call', () => {
     await api.post('/api/login').send(userLoginObject1).expect(401)
     await api.post('/api/login').send(userLoginObject2).expect(401)
     await api.post('/api/login').send(userLoginObject3).expect(401)
-
-    await User.findByIdAndDelete(savedUser.body.id)
   })
 })
 

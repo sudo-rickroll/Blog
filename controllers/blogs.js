@@ -2,6 +2,16 @@ require('express-async-errors')
 const router = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const { SECRET_KEY } = require('../utils/config')
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')){
+    return authorization.substring(7)
+  }
+  return null
+}
 
 router.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { passwordHash: 0, blogs: 0 })
@@ -14,13 +24,24 @@ router.get('/:id', async (request, response) => {
 })
 
 router.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
-  const result = await blog.save()
-  if (request.body.user){
-    const user = await User.findById(request.body.user)
-    user.blogs = user.blogs.concat(result._id)
-    await user.save()
+  const token = getTokenFrom(request)
+  const decodedToken = token === null ? null : jwt.verify(token, SECRET_KEY)
+  if (!token || !decodedToken.id){
+    return response.status(401).send({
+      error: 'Invalid or missing authorization token'
+    })
   }
+  const blog = new Blog({
+    url: request.body.url,
+    title: request.body.title,
+    author: request.body.author,
+    user: decodedToken.id,
+    likes: request.body.likes
+  })
+  const result = await blog.save()
+  const user = await User.findById(decodedToken.id)
+  user.blogs = user.blogs.concat(result._id)
+  await user.save()
   response.status(201).send(result)
 })
 
