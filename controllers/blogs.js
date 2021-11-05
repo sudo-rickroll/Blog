@@ -38,9 +38,23 @@ router.post('/', async (request, response) => {
 })
 
 router.delete('/:id', async (request, response) => {
-  const blog = await Blog.findByIdAndDelete(request.params.id)
+  const token = request.token
+  const decodedToken = token === null ? null : jwt.verify(token, SECRET_KEY)
+  if (!token || !decodedToken.id){
+    return response.status(401).send({
+      error: 'Invalid or missing authorization token'
+    })
+  }
+  let blog = await Blog.findById(request.params.id)
+  const user = await User.findById(blog.user)
+  if (user.username !== decodedToken.username) {
+    return response.status(401).send({
+      error: 'Current user cannot delete this blog as it has been created by another user.'
+    })
+  }
+  blog = await Blog.findByIdAndRemove(blog._id)
   if (blog){
-    return response.status(200).send(blog)
+    return response.status(200).send('Deleted item: \n',blog)
   }
   response.status(404).send({
     error: `Item with ID ${request.params.id} not found`
