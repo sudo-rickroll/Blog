@@ -15,10 +15,9 @@ app.use(express.json())
 
 mongoose.connect(config.URL).then(() => logger.info('Connected to database')).catch(error => logger.error(error))
 
-app.use(middleware.tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/blogs', blogsRouter)
+app.use('/api/blogs', middleware.tokenExtractor, middleware.userExtractor, blogsRouter)
 app.use(middleware.unknownHandler)
 app.use(middleware.errorHandler)
 
