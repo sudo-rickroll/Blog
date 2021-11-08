@@ -8,12 +8,11 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxODI1ZDMxM
 {
   "title": "Lat Blog",
   "author": "Rangasai K R",
-  "url": "abc.com",
-  "user": "6182605500405cd48109c18a"
+  "url": "abc.com"
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/61858407c93cb8f12ec86700
+DELETE http://localhost:3003/api/blogs/618970c761db7c41e491e65a
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxODI1ZDMxMjI2YzVhMDcxOTE0MWUyMSIsInVzZXJuYW1lIjoiYW5vbnltb3VzIiwiaWF0IjoxNjM2MDQzOTExfQ.dNkKVFDziOJxAEb-q_YH1aeel3t-BTOgdIfEgf1VNJU
 
 ###
