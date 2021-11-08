@@ -8,7 +8,7 @@ const api = supertest(app)
 beforeEach(async () => {
   await helper.deleteAllRecords(User)
   await helper.insertAllRecords(User, helper.users)
-})
+}, 10000)
 
 describe('User POST API Calls', () => {
   test('add a user', async () => {
