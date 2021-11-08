@@ -1,35 +1,54 @@
+require('express-async-errors')
 const router = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const { SECRET_KEY } = require('../utils/config')
 
 router.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('author')
+  const blogs = await Blog.find({}).populate('user', { passwordHash: 0, blogs: 0 })
   response.send(blogs)
 })
 
 router.get('/:id', async (request, response) => {
-  const blog = await (await Blog.findById(request.params.id)).populated('author')
+  const blog = await Blog.findById(request.params.id).populate('user', { passwordHash: 0, blogs: 0 })
   response.send(blog)
 })
 
 router.post('/', async (request, response) => {
-  const { title, author, url, likes } = request.body
-  const user = await User.findOne({ name: author })
+  const token = request.token
+  const decodedToken = token === null ? null : jwt.verify(token, SECRET_KEY)
+  if (!token || !decodedToken.id){
+    return response.status(401).send({
+      error: 'Invalid or missing authorization token'
+    })
+  }
   const blog = new Blog({
-    title,
-    author: user._id,
-    url,
-    likes
+    url: request.body.url,
+    title: request.body.title,
+    author: request.body.author,
+    user: request.user,
+    likes: request.body.likes
   })
   const result = await blog.save()
+  const user = await User.findById(request.user)
   user.blogs = user.blogs.concat(result._id)
   await user.save()
   response.status(201).send(result)
 })
 
 router.delete('/:id', async (request, response) => {
-  const blog = await Blog.findByIdAndDelete(request.params.id)
+  let blog = await Blog.findById(request.params.id)
+  if (blog.user.toString() !== request.user) {
+    return response.status(401).send({
+      error: 'Current user cannot delete this blog as it has been created by another user.'
+    })
+  }
+  blog = await Blog.findByIdAndRemove(blog._id)
   if (blog){
+    const user = await User.findById(blog.user)
+    user.blogs = user.blogs.filter(id => id !== blog._id)
+    await user.save()
     return response.status(200).send(blog)
   }
   response.status(404).send({
@@ -38,13 +57,12 @@ router.delete('/:id', async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  const { title, author, url, likes } = request.body
-  let blog = new Blog({
-    title,
-    author,
-    url,
-    likes
-  })
+  let blog = {
+    title: request.body.title,
+    author: request.body.author,
+    url: request.body.url,
+    likes: request.body.likes
+  }
   blog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.status(200).send(blog)
 })

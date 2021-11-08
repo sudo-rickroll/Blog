@@ -1,4 +1,3 @@
-require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -18,8 +17,7 @@ mongoose.connect(config.URL).then(() => logger.info('Connected to database')).ca
 
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
-app.use('/api/blogs', blogsRouter)
-
+app.use('/api/blogs', middleware.tokenExtractor, middleware.userExtractor, blogsRouter)
 app.use(middleware.unknownHandler)
 app.use(middleware.errorHandler)
 

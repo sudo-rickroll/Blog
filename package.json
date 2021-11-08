@@ -30,7 +30,7 @@
     "supertest": "^6.1.6"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
@@ -39,7 +39,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.0.11",
-    "mongoose-unique-validator": "^3.0.0"
+    "mongoose-unique-validator": "^2.0.3"
   },
   "jest": {
     "testEnvironment": "node"

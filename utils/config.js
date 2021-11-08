@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const PORT = process.env.PORT
-const SECRET = process.env.SECRET_KEY
 let URL = ''
 if (process.env.NODE_ENV === 'test'){
   URL = process.env.MONGODB_URI_TEST
@@ -9,9 +8,10 @@ if (process.env.NODE_ENV === 'test'){
 else{
   URL = process.env.MONGODB_URI
 }
+const SECRET_KEY = process.env.SECRET_KEY
 
 module.exports = {
   PORT,
-  SECRET,
-  URL
+  URL,
+  SECRET_KEY
 }

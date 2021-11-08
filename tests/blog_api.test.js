@@ -1,35 +1,25 @@
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
 const mongoose = require('mongoose')
-
+const helper = require('../utils/helper')
 const api = supertest(app)
+const jwt = require('jsonwebtoken')
+const config = require('../utils/config')
 
-const blogs = [{
-  title: 'First Blog',
-  author: 'Rangasai K R',
-  url: 'abc.com',
-  likes: 5
-},
-{
-  title: 'Second Blog',
-  author: 'Rangasai K R',
-  url: 'abc.com',
-  likes: 10
-}]
+let token = ''
+let user = {}
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  for (let blog of blogs){
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
-})
+  await helper.deleteAllRecords(Blog)
+  await helper.insertAllRecords(Blog, helper.blogs)
+}, 10000)
 
-describe('GET API Calls', () => {
+describe('Blog GET API Calls', () => {
   test('get all items array length', async () => {
     const blogsArray = await api.get('/api/blogs')
-    expect(blogsArray.body).toHaveLength(blogs.length)
+    expect(blogsArray.body).toHaveLength(helper.blogs.length)
   })
   test('check if id exists', async () => {
     const blogsArray = await api.get('/api/blogs')
@@ -45,18 +35,25 @@ describe('GET API Calls', () => {
   })
 })
 
-describe('POST API Calls', () => {
-  test('create a blog', async () => {
-    const blogObject = {
+describe('Blog POST API Calls', () => {
+  test('create a blog and test likes', async () => {
+    await helper.deleteAllRecords(User)
+    user = await helper.insertUser()
+    let blogObject = {
       title: 'Third Blog',
       author: 'William Shakespeare',
       url: 'theethythou.com',
-      likes: 1000000
+      likes: 10000
     }
-    await api.post('/api/blogs').send(blogObject).expect(201).expect('Content-Type', /application\/json/)
+    token = jwt.sign({
+      id: user._id.toString(),
+      username: user.username
+    }, config.SECRET_KEY)
+    await api.post('/api/blogs').set({ 'authorization': `bearer ${token}` }).send(blogObject).expect(201).expect('Content-Type', /application\/json/)
     const blogArray = await api.get('/api/blogs')
-    expect(blogArray.body).toHaveLength(blogs.length + 1)
+    expect(blogArray.body).toHaveLength(helper.blogs.length + 1)
     expect(blogArray.body.map(blog => blog.title)).toContain('Third Blog')
+    await api.post('/api/blogs').send(blogObject).expect(401)
   })
   test('check default likes count', async () => {
     const blogObject = {
@@ -64,7 +61,7 @@ describe('POST API Calls', () => {
       author: 'William Shakespeare',
       url: 'theethythou.com'
     }
-    await api.post('/api/blogs').send(blogObject)
+    await api.post('/api/blogs').set({ 'authorization': `bearer ${token}` }).send(blogObject)
     const blogArray = await api.get('/api/blogs')
     expect(blogArray.body[2].likes).toBe(0)
   })
@@ -73,21 +70,29 @@ describe('POST API Calls', () => {
       author: 'Anonymous',
       likes: 1000000
     }
-    await api.post('/api/blogs').send(blogObject).expect(400)
+    await api.post('/api/blogs').set({ 'authorization': `bearer ${token}` }).send(blogObject).expect(400)
   })
+
 })
 
-describe('DELETE API Calls', () => {
+describe('Blog DELETE API Calls', () => {
   test('delete an item by ID', async () => {
-    const blogs = await Blog.find({})
-    const id = blogs[0].id
-    const deletedItem = await api.delete(`/api/blogs/${id}`).expect(200)
-    expect(deletedItem.body).toEqual(JSON.parse(JSON.stringify(blogs[0])))
-    await api.delete(`/api/blogs/${id}`).expect(404)
+    let blogObject = {
+      title: 'Third Blog',
+      author: 'William Shakespeare',
+      url: 'theethythou.com',
+      user: user._id,
+      likes: 10000
+    }
+    blogObject = await new Blog(blogObject).save()
+    await api.delete(`/api/blogs/${blogObject._id.toString()}`).expect(401)
+    await api.delete(`/api/blogs/${blogObject._id.toString()}`).set({ 'authorization': `bearer ${token}` }).expect(200).expect('Content-Type', /application\/json/)
   })
 })
 
-describe('PUT API Calls', () => {
+
+
+describe('Blog PUT API Calls', () => {
   test('check blog update', async () => {
     const existingBlog = await Blog.findOne()
     const newBlog = {

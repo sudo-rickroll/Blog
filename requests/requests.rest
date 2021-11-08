@@ -1,39 +1,38 @@
 GET http://localhost:3003/api/blogs
 
 ###
-GET http://localhost:3003/api/users
-
-###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxODI1ZDMxMjI2YzVhMDcxOTE0MWUyMSIsInVzZXJuYW1lIjoiYW5vbnltb3VzIiwiaWF0IjoxNjM2MDQzOTExfQ.dNkKVFDziOJxAEb-q_YH1aeel3t-BTOgdIfEgf1VNJU
 
 {
-  "title": "Blog",
+  "title": "Lat Blog",
   "author": "Rangasai K R",
-  "url": "abc.com",
-  "likes": 5
+  "url": "abc.com"
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/617a73ce40a70f31c28f5ab9
+DELETE http://localhost:3003/api/blogs/618970c761db7c41e491e65a
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxODI1ZDMxMjI2YzVhMDcxOTE0MWUyMSIsInVzZXJuYW1lIjoiYW5vbnltb3VzIiwiaWF0IjoxNjM2MDQzOTExfQ.dNkKVFDziOJxAEb-q_YH1aeel3t-BTOgdIfEgf1VNJU
 
 ###
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "name": "Rangasai K R",
-  "username": "Rangasai",
-  "password": "abcd1234"
+  "username": "anonymous",
+  "name": "Anonymous",
+  "password": "ansdfgg"
 }
+
+###
+GET http://localhost:3003/api/users
 
 ###
 POST http://localhost:3003/api/login
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJhbmdhc2FpIiwiaWQiOiI2MTdlN2RkNmEyYzgxYjJhMjJiYzg0ZTIiLCJpYXQiOjE2MzU3OTM5NTJ9.QaGSrcX70r9v4Yk3dLmeEUymxpX1NxZNSWSSgWm-xqE
 
 {
-  "username": "Rangasai",
-  "password": "abcd1234"
+  "username": "anonymous",
+  "password": "ansdfgg"
 }
-
