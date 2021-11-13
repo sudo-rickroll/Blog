@@ -9,16 +9,26 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
   const [notification, setNotification] = useState({})
+  const loggedIn = window.localStorage.getItem('token') ? true : false
+
+  useEffect(() => {
+    blogService.getAll()
+    .then(data => setBlogs(data))
+    .catch(error => {
+      console.log(error.response.data.error || error.response.data)
+      setNotification({
+        error : error.response.data.error || error.response.data
+      })
+      setTimeout(() => setNotification({}), 5000)
+    })
+  }, [])
   
-  const handleSubmit = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
     try{
       const user = await loginService.validateLogin({username, password})
-      setToken(user.token)
-      const blogsArray = await blogService.getAll()
-      setBlogs(blogsArray)
+      window.localStorage.setItem('token', user.token)
       setNotification({
         success : `Successfully logged in, user ${user.name}` 
       })
@@ -33,10 +43,17 @@ const App = () => {
     }
     
   }
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('token')
+    setNotification({
+      success : `Successfully logged out`
+    })
+  }
   return (
     <div>
       <Notifications message = {notification} />
-      {token ? <Blogs blogs={blogs}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleSubmit}/>}
+      {loggedIn ? <Blogs blogs={blogs} clear={handleLogout} user={username}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin}/>}
     </div>
   )
 }
