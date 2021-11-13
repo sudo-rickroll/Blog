@@ -22,7 +22,7 @@ const Failure = ({message, style}) => {
     )
 }
 
-export default {
+export {
     Success,
     Failure
 }

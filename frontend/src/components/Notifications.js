@@ -1,5 +1,4 @@
-import Success from './Notification'
-import Failure from './Notification'
+import { Success, Failure } from './Notification'
 
 const Notifications = ({message}) => {
     const messageStyle = {
