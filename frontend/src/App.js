@@ -10,19 +10,24 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [notification, setNotification] = useState({})
-  const loggedIn = window.localStorage.getItem('token') ? true : false
-
+  const [newBlog, setNewBlog] = useState({})
+  const [loggedIn, setLoggedIn] = useState(window.localStorage.getItem('token') ? true : false)
+  const formInputStyle = {
+    marginBottom: 5
+}
   useEffect(() => {
-    blogService.getAll()
-    .then(data => setBlogs(data))
-    .catch(error => {
-      console.log(error.response.data.error || error.response.data)
-      setNotification({
-        error : error.response.data.error || error.response.data
-      })
-      setTimeout(() => setNotification({}), 5000)
-    })
-  }, [])
+    if (loggedIn){
+      blogService.getAll()
+      .then(data => setBlogs(data))
+      .catch(error => {
+        console.log(error.response.data.error || error.response.data)
+        setNotification({
+          error : error.response.data.error || error.response.data
+        })
+        setTimeout(() => setNotification({}), 5000)
+      })      
+    }
+  }, [loggedIn])
   
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -33,6 +38,7 @@ const App = () => {
         success : `Successfully logged in, user ${user.name}` 
       })
       setTimeout(() => setNotification({}), 5000)
+      setLoggedIn(true)
     }
     catch(error){
       console.log(error.response.data.error || error.response.data)
@@ -50,10 +56,29 @@ const App = () => {
       success : `Successfully logged out`
     })
   }
+
+  const createNewBlog = async (event) => {
+    event.preventDefault()
+    try{
+      await blogService.createNew(newBlog, window.localStorage.getItem('token'))
+      setNotification({
+        success : `Blog added successfully`
+      })
+      setTimeout(() => setNotification({}), 5000)
+      setLoggedIn(true)
+    }
+    catch(error){
+      console.log(error.response.data.error || error.response.data || error.message)
+      setNotification({
+        error : error.response.data.error || error.response.data || error.message
+      })
+      setTimeout(() => setNotification({}), 5000)
+    }
+  }
   return (
     <div>
       <Notifications message = {notification} />
-      {loggedIn ? <Blogs blogs={blogs} clear={handleLogout} user={username}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin}/>}
+      {loggedIn ? <Blogs blogs={blogs} clear={handleLogout} user={username} newBlog={{newBlog, setNewBlog}} handleSubmit={createNewBlog} style={formInputStyle}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
     </div>
   )
 }
