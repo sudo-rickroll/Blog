@@ -6,10 +6,10 @@ import LoginForm from './components/Login'
 import loginService from './services/login'
 
 const App = () => {
+  const [notification, setNotification] = useState({})
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState({})
+  const [password, setPassword] = useState('')  
   const [newBlog, setNewBlog] = useState({})
   const [loggedIn, setLoggedIn] = useState(window.localStorage.getItem('token') ? true : false)
   const formInputStyle = {
