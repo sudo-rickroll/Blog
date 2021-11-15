@@ -16,7 +16,7 @@ const App = () => {
     marginBottom: 5
 }
   useEffect(() => {
-    if (loggedIn){
+    if (!blogs.length && loggedIn) {
       blogService.getAll()
       .then(data => setBlogs(data))
       .catch(error => {
@@ -25,9 +25,9 @@ const App = () => {
           error : error.response.data.error || error.response.data
         })
         setTimeout(() => setNotification({}), 5000)
-      })      
-    }
-  }, [loggedIn])
+      })
+    }   
+  }, [blogs, loggedIn])
   
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -55,6 +55,8 @@ const App = () => {
     setNotification({
       success : `Successfully logged out`
     })
+    setTimeout(() => setNotification({}), 5000)
+    setLoggedIn(false)
   }
 
   const createNewBlog = async (event) => {
@@ -65,7 +67,7 @@ const App = () => {
         success : `Blog added successfully`
       })
       setTimeout(() => setNotification({}), 5000)
-      setLoggedIn(true)
+      setBlogs([])
     }
     catch(error){
       console.log(error.response.data.error || error.response.data || error.message)
