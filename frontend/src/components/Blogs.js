@@ -1,11 +1,12 @@
 import Blog from "./Blog"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Togglable from "./Togglable"
 import CreateBlog from "./CreateBlog"
 
 const Blogs = ({clear, notify, style, getBlogs, addBlog}) => {
     const [blogs, setBlogs] = useState([])
     const [newBlog, setNewBlog] = useState({})
+    const toggleCreate = useRef()
 
     useEffect(() => {
         if (!blogs.length || !newBlog) {
@@ -17,6 +18,7 @@ const Blogs = ({clear, notify, style, getBlogs, addBlog}) => {
     const createNewBlog = async (event) => {
         event.preventDefault()
         await addBlog(newBlog)
+        toggleCreate.current.toggleVisibility()
         setNewBlog(null)
     }
     const createBlog = (item, value) => {
@@ -29,7 +31,7 @@ const Blogs = ({clear, notify, style, getBlogs, addBlog}) => {
         <div>
             <h2>blogs</h2>
             <p>{window.localStorage.getItem('user')} has logged in <button onClick={clear}>logout</button></p>
-            <Togglable buttonLabel="Add Blog">
+            <Togglable buttonLabel="Add Blog" ref={toggleCreate}>
               <CreateBlog createBlogObject={createBlog} addBlog={createNewBlog} style={style} />
             </Togglable>
             {blogs ? blogs.map(blog =>
