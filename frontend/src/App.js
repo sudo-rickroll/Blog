@@ -3,6 +3,7 @@ import Blogs from './components/Blogs'
 import Notifications from './components/Notifications'
 import LoginForm from './components/Login'
 import loginService from './services/login'
+import blogService from './services/blogs'
 
 const App = () => {
   const [notification, setNotification] = useState({})  
@@ -11,7 +12,36 @@ const App = () => {
   const formInputStyle = {
     marginBottom: 5
 }
-  
+  const fetchBlogs = () => {
+    blogService.getAll()
+    .then(data => data)
+    .catch(error => {
+      console.log(error.response.data.error || error.response.data)
+      setNotification({
+        error : error.response.data.error || error.response.data
+      })
+      setTimeout(() => setNotification({}), 5000)
+      return null
+    })
+  }
+
+  const createBlog = async (blogObject) => {
+    try{
+      await blogService.createNew(blogObject, window.localStorage.getItem('token'))
+      setNotification({
+        success : `Blog added successfully`
+      })
+      setTimeout(() => setNotification({}), 5000)
+    }
+    catch(error){
+      console.log(error.response.data.error || error.response.data || error.message)
+      setNotification({
+        error : error.response.data.error || error.response.data || error.message
+      })
+      setTimeout(() => setNotification({}), 5000)
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try{
@@ -45,7 +75,7 @@ const App = () => {
   return (
     <div>
       <Notifications message = {notification} />
-      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} notify={setNotification} style={formInputStyle}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
+      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} notify={setNotification} style={formInputStyle} getBlogs={fetchBlogs} addBlog={createBlog}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
     </div>
   )
 }
