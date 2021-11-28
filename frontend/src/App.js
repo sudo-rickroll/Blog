@@ -12,17 +12,20 @@ const App = () => {
   const formInputStyle = {
     marginBottom: 5
 }
-  const fetchBlogs = () => {
-    blogService.getAll()
-    .then(data => data)
-    .catch(error => {
+  const fetchBlogs = async () => {
+    try {
+      const data = await blogService.getAll()
+      return data
+    }
+    catch(error){
       console.log(error.response.data.error || error.response.data)
       setNotification({
         error : error.response.data.error || error.response.data
       })
       setTimeout(() => setNotification({}), 5000)
-      return null
-    })
+      return null      
+    }
+
   }
 
   const createBlog = async (blogObject) => {
