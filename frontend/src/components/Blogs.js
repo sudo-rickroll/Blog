@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Togglable from "./Togglable"
 import CreateBlog from "./CreateBlog"
 
-const Blogs = ({clear, notify, style, getBlogs, addBlog}) => {
+const Blogs = ({clear, notify, style, getBlogs, addBlog, updateBlog}) => {
     const [blogs, setBlogs] = useState([])
     const [newBlog, setNewBlog] = useState({})
     const toggleCreate = useRef()
@@ -35,7 +35,7 @@ const Blogs = ({clear, notify, style, getBlogs, addBlog}) => {
               <CreateBlog createBlogObject={createBlog} addBlog={createNewBlog} style={style} />
             </Togglable>
             {blogs ? blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} update={updateBlog}/>
             ) : null}
         </div>
     )   

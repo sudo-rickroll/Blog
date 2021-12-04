@@ -45,6 +45,19 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (id, blogObject) => {
+    try{
+      await blogService.update(id, blogObject, window.localStorage.getItem('token'))
+    }
+    catch(error){
+      console.log(error.response.data.error || error.response.data || error.message)
+      setNotification({
+        error : error.response.data.error || error.response.data || error.message
+      })
+      setTimeout(() => setNotification({}), 5000)
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try{
@@ -78,7 +91,7 @@ const App = () => {
   return (
     <div>
       <Notifications message = {notification} />
-      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} notify={setNotification} style={formInputStyle} getBlogs={fetchBlogs} addBlog={createBlog}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
+      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} notify={setNotification} style={formInputStyle} getBlogs={fetchBlogs} addBlog={createBlog} updateBlog={updateBlog}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
     </div>
   )
 }
