@@ -14,18 +14,26 @@ const createNew = async (blogObject, token) => {
   return response.data
 }
 
-const update = async (id, blogObject, token) => {
+const updateExisting = async (id, blogObject, token) => {
   const configuration = {
     headers: { Authorization : `bearer ${token}` }
   }
-  const response = await axios.put(`${baseUrl}/${id}`, blogObject, configuration)
-  return response.data
+  await axios.put(`${baseUrl}/${id}`, blogObject, configuration)
+  
+}
+
+const deleteExisting = async (id, token) => {
+  const configuration = {
+    headers: { Authorization : `bearer ${token}` }
+  }
+  await axios.delete(`${baseUrl}/${id}`, configuration)
 }
 
 const services = {
   getAll,
   createNew,
-  update
+  updateExisting,
+  deleteExisting
 }
 
 export default services
