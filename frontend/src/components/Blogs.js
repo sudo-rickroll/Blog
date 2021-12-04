@@ -34,7 +34,7 @@ const Blogs = ({clear, notify, style, getBlogs, addBlog, updateBlog}) => {
             <Togglable buttonLabel="Add Blog" ref={toggleCreate}>
               <CreateBlog createBlogObject={createBlog} addBlog={createNewBlog} style={style} />
             </Togglable>
-            {blogs ? blogs.map(blog =>
+            {blogs ? blogs.sort((a,b) => b.likes - a.likes).map(blog =>
             <Blog key={blog.id} blog={blog} update={updateBlog}/>
             ) : null}
         </div>
