@@ -1,6 +1,11 @@
 import { Success, Failure } from './Notification'
+import PropTypes from 'prop-types'
 
 const Notifications = ({message}) => {
+    Notifications.propTypes = {
+        message: PropTypes.string.isRequired
+    }
+
     const messageStyle = {
         color: 'black',
         background: 'lightgrey',

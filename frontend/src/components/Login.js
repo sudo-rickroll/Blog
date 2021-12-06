@@ -1,5 +1,13 @@
-const LoginForm = ({setUsername, setPassword, handleSubmit, style}) => {
+import PropTypes from 'prop-types'
 
+const LoginForm = ({setUsername, setPassword, handleSubmit, style}) => {
+    LoginForm.propTypes = {
+        setUsername: PropTypes.func.isRequired,
+        setPassword: PropTypes.func.isRequired,
+        handleSubmit: PropTypes.func.isRequired,
+        style: PropTypes.object.isRequired
+    }
+    
     return (
         <div>
             <h2>login to the application</h2>

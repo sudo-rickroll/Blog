@@ -2,8 +2,18 @@ import Blog from "./Blog"
 import React, { useState, useEffect, useRef } from 'react'
 import Togglable from "./Togglable"
 import CreateBlog from "./CreateBlog"
+import PropTypes from "prop-types"
 
-const Blogs = ({clear, notify, style, getBlogs, addBlog, updateBlog, deleteBlog}) => {
+const Blogs = ({clear, style, getBlogs, addBlog, updateBlog, deleteBlog}) => {
+    Blogs.propTypes = {
+        getBlogs: PropTypes.func.isRequired,
+        addBlog: PropTypes.func.isRequired,
+        updateBlog: PropTypes.func.isRequired,
+        deleteBlog: PropTypes.func.isRequired,
+        clear: PropTypes.func.isRequired,
+        style: PropTypes.object.isRequired
+    }
+    
     const [blogs, setBlogs] = useState([])
     const [newBlog, setNewBlog] = useState({})
     const toggleCreate = useRef()

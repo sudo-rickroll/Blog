@@ -1,4 +1,11 @@
+import PropTypes from 'prop-types'
+
 const Success = ({message, style}) => {
+    Success.propTypes = {
+        message: PropTypes.string.isRequired,
+        style: PropTypes.object.isRequired
+    }
+
     const messageStyle = {
         ...style,
         color: 'green'
@@ -11,6 +18,11 @@ const Success = ({message, style}) => {
 }
 
 const Failure = ({message, style}) => {
+    Success.propTypes = {
+        message: PropTypes.string.isRequired,
+        style: PropTypes.object.isRequired
+    }
+    
     const messageStyle = {
         ...style,
         color: 'red'

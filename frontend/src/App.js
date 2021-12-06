@@ -104,7 +104,7 @@ const App = () => {
   return (
     <div>
       <Notifications message = {notification} />
-      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} notify={setNotification} style={formInputStyle} getBlogs={fetchBlogs} addBlog={createBlog} updateBlog={updateBlog} deleteBlog={deleteBlog}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
+      {window.localStorage.getItem('token') ? <Blogs clear={handleLogout} style={formInputStyle} getBlogs={fetchBlogs} addBlog={createBlog} updateBlog={updateBlog} deleteBlog={deleteBlog}/> : <LoginForm setUsername = {setUsername} setPassword={setPassword} handleSubmit={handleLogin} style={formInputStyle}/>}
     </div>
   )
 }

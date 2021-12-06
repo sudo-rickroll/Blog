@@ -1,6 +1,14 @@
 import React, {useState, useEffect} from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({blog, renderBlogs, updateBlog, deleteBlog}) => {
+  Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    renderBlogs: PropTypes.func.isRequired,
+    updateBlog: PropTypes.func.isRequired,
+    deleteBlog: PropTypes.func.isRequired
+  }
+  
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
