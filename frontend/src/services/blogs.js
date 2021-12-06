@@ -19,7 +19,7 @@ const updateExisting = async (id, blogObject, token) => {
     headers: { Authorization : `bearer ${token}` }
   }
   await axios.put(`${baseUrl}/${id}`, blogObject, configuration)
-  
+
 }
 
 const deleteExisting = async (id, token) => {

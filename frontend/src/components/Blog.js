@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({blog, renderBlogs, updateBlog, deleteBlog}) => {
+const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   Blog.propTypes = {
     blog: PropTypes.object.isRequired,
     renderBlogs: PropTypes.func.isRequired,
     updateBlog: PropTypes.func.isRequired,
     deleteBlog: PropTypes.func.isRequired
   }
-  
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,9 +29,9 @@ const Blog = ({blog, renderBlogs, updateBlog, deleteBlog}) => {
   }, [likes])
 
   const toggleVisibility = () => setVisible(!visible)
-  const displayStyle = {display: visible ? "" : "none"}
-  const buttonLabel = visible ? "hide" : "show"
-  
+  const displayStyle = { display: visible ? '' : 'none' }
+  const buttonLabel = visible ? 'hide' : 'show'
+
   const increaseLikes = async () => {
     setLikes(likes+1)
   }
@@ -43,19 +43,19 @@ const Blog = ({blog, renderBlogs, updateBlog, deleteBlog}) => {
   }
 
   return (
-  <div style={blogStyle}>
-    {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility}/>
-    <div style={displayStyle} >
-      {blog.url}<br />
-      {likes}<input type="button" value="like" onClick={increaseLikes}/><br />
-      {blog.user.username}<br/>
-      <input type="button" onClick={removeBlog} value="remove" />
+    <div style={blogStyle}>
+      {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility}/>
+      <div style={displayStyle} >
+        {blog.url}<br />
+        {likes}<input type="button" value="like" onClick={increaseLikes}/><br />
+        {blog.user.username}<br/>
+        <input type="button" onClick={removeBlog} value="remove" />
+      </div>
     </div>
-  </div> 
   )
 
 }
-   
+
 
 
 export default Blog

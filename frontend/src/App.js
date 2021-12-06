@@ -6,12 +6,12 @@ import loginService from './services/login'
 import blogService from './services/blogs'
 
 const App = () => {
-  const [notification, setNotification] = useState({})  
+  const [notification, setNotification] = useState({})
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')  
+  const [password, setPassword] = useState('')
   const formInputStyle = {
     marginBottom: 5
-}
+  }
   const fetchBlogs = async () => {
     try {
       const data = await blogService.getAll()
@@ -23,7 +23,7 @@ const App = () => {
         error : error.response.data.error || error.response.data
       })
       setTimeout(() => setNotification({}), 5000)
-      return null      
+      return null
     }
 
   }
@@ -32,7 +32,7 @@ const App = () => {
     try{
       await blogService.createNew(blogObject, window.localStorage.getItem('token'))
       setNotification({
-        success : `Blog added successfully`
+        success : 'Blog added successfully'
       })
       setTimeout(() => setNotification({}), 5000)
     }
@@ -74,11 +74,11 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try{
-      const user = await loginService.validateLogin({username, password})
+      const user = await loginService.validateLogin({ username, password })
       window.localStorage.setItem('token', user.token)
       window.localStorage.setItem('user', user.name)
       setNotification({
-        success : `Successfully logged in, user ${user.name}` 
+        success : `Successfully logged in, user ${user.name}`
       })
       setTimeout(() => setNotification({}), 5000)
     }
@@ -89,14 +89,14 @@ const App = () => {
       })
       setTimeout(() => setNotification({}), 5000)
     }
-    
+
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('token')
     window.localStorage.removeItem('user')
     setNotification({
-      success : `Successfully logged out`
+      success : 'Successfully logged out'
     })
     setTimeout(() => setNotification({}), 5000)
   }
