@@ -47,7 +47,7 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
       </div>
       <div data-testid="dynamic-elements" style={displayStyle} >
         {blog.url}<br />
-        {likes}<input type="button" value="like" onClick={increaseLikes}/><br />
+        {likes}<input type="button" value="like" onClick={increaseLikes} data-testid="increase-likes"/><br />
         {blog.user.username}<br/>
         <input type="button" onClick={removeBlog} value="remove" />
       </div>
