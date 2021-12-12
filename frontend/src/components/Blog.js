@@ -41,9 +41,9 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle} className="blog">
+    <div style={blogStyle}>
       <div data-testid="static-elements">
-        {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility}/>
+        {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility} data-testid="toggle-details"/>
       </div>
       <div data-testid="dynamic-elements" style={displayStyle} >
         {blog.url}<br />
