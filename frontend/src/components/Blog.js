@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
@@ -18,15 +18,6 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   }
   const [ visible, setVisible ] = useState(false)
   const [ likes, setLikes ] = useState(blog.likes)
-  useEffect(() => {
-    const blogObject = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes
-    }
-    updateBlog(blog.id, blogObject).then()
-  }, [likes])
 
   const toggleVisibility = () => setVisible(!visible)
   const displayStyle = { display: visible ? '' : 'none' }
@@ -34,6 +25,13 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
 
   const increaseLikes = async () => {
     setLikes(likes+1)
+    const blogObject = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: likes+1
+    }
+    await updateBlog(blog.id, blogObject)
   }
   const removeBlog = async () => {
     if(window.confirm(`Remove blog '${blog.title}' by ${blog.user.username}`)){
@@ -43,9 +41,11 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility}/>
-      <div style={displayStyle} >
+    <div style={blogStyle} className="blog">
+      <div data-testid="static-elements">
+        {blog.title} {blog.author} <input type="button" value={buttonLabel} onClick={toggleVisibility}/>
+      </div>
+      <div data-testid="dynamic-elements" style={displayStyle} >
         {blog.url}<br />
         {likes}<input type="button" value="like" onClick={increaseLikes}/><br />
         {blog.user.username}<br/>
