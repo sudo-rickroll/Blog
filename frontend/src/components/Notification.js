@@ -3,7 +3,7 @@ import React from 'react'
 
 const Success = ({ message, style }) => {
   Success.propTypes = {
-    message: PropTypes.string.isRequired,
+    message: PropTypes.object.isRequired,
     style: PropTypes.object.isRequired
   }
 

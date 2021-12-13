@@ -15,26 +15,24 @@ const Blogs = ({ clear, style, getBlogs, addBlog, updateBlog, deleteBlog }) => {
   }
 
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState({})
   const toggleCreate = useRef()
 
   useEffect(() => {
-    if (!blogs.length || !newBlog) {
+    if (!blogs.length) {
       getBlogs()
         .then(data => setBlogs(data))
     }
-  })
+  }, [blogs])
 
-  const createNewBlog = async (event) => {
-    event.preventDefault()
+  const createNewBlog = async (newBlog) => {
     await addBlog(newBlog)
     toggleCreate.current.toggleVisibility()
-    setNewBlog(null)
+    setBlogs(await getBlogs())
   }
-  const createBlog = (item, value) => {
-    const newObject = {}
-    newObject[item] = value
-    setNewBlog({ ...newBlog, ...newObject })
+
+  const deleteExisting = async id => {
+    await deleteBlog(id)
+    setBlogs(blogs.filter(blog => blog.id !== id))
   }
 
   return (
@@ -42,10 +40,10 @@ const Blogs = ({ clear, style, getBlogs, addBlog, updateBlog, deleteBlog }) => {
       <h2>blogs</h2>
       <p>{window.localStorage.getItem('user')} has logged in <button onClick={clear}>logout</button></p>
       <Togglable buttonLabel="Add Blog" ref={toggleCreate}>
-        <CreateBlog createBlogObject={createBlog} addBlog={createNewBlog} style={style} />
+        <CreateBlog addBlog={createNewBlog} style={style} />
       </Togglable>
       {blogs ? blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} renderBlogs={setNewBlog} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteExisting}/>
       ) : null}
     </div>
   )

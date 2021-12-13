@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    renderBlogs: PropTypes.func.isRequired,
     updateBlog: PropTypes.func.isRequired,
     deleteBlog: PropTypes.func.isRequired
   }
@@ -36,7 +35,6 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   const removeBlog = async () => {
     if(window.confirm(`Remove blog '${blog.title}' by ${blog.user.username}`)){
       await deleteBlog(blog.id)
-      renderBlogs(null)
     }
   }
 
@@ -55,7 +53,5 @@ const Blog = ({ blog, renderBlogs, updateBlog, deleteBlog }) => {
   )
 
 }
-
-
 
 export default Blog

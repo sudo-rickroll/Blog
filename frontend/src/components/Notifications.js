@@ -4,7 +4,7 @@ import React from 'react'
 
 const Notifications = ({ message }) => {
   Notifications.propTypes = {
-    message: PropTypes.string.isRequired
+    message: PropTypes.object.isRequired
   }
 
   const messageStyle = {
