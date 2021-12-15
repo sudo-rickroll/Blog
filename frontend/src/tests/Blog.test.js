@@ -2,7 +2,7 @@ import React from 'react'
 import Blog from '../components/Blog'
 import CreateBlog from '../components/CreateBlog'
 import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, prettyDOM } from '@testing-library/react'
 //import { prettyDOM } from '@testing-library/dom'
 
 describe('Blog component tests', () => {
@@ -50,6 +50,7 @@ describe('Blog component tests', () => {
 
     fireEvent.click(button)
 
+    expect(button).toHaveValue('hide')
     expect(dynamicDiv).not.toHaveStyle('display:none')
   })
 

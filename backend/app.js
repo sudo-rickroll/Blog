@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -13,8 +14,12 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect(config.URL).then(() => logger.info('Connected to database')).catch(error => logger.error(error))
+mongoose.connect(config.URL).then(() => logger.info(`Connected to ${process.env.NODE_ENV} database`)).catch(error => logger.error(error))
 
+if(process.env.NODE_ENV === 'test'){
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/blogs', middleware.tokenExtractor, middleware.userExtractor, blogsRouter)

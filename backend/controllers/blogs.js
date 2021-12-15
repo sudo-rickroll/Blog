@@ -1,4 +1,5 @@
 require('express-async-errors')
+require('dotenv').config()
 const router = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -38,6 +39,13 @@ router.post('/', async (request, response) => {
 })
 
 router.delete('/:id', async (request, response) => {
+  const token = request.token
+  const decodedToken = token === null ? null : jwt.verify(token, SECRET_KEY)
+  if (!token || !decodedToken.id){
+    return response.status(401).send({
+      error: 'Invalid or missing authorization token'
+    })
+  }
   let blog = await Blog.findById(request.params.id)
   if (blog.user.toString() !== request.user) {
     return response.status(401).send({
@@ -57,6 +65,13 @@ router.delete('/:id', async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
+  const token = request.token
+  const decodedToken = token === null ? null : jwt.verify(token, SECRET_KEY)
+  if (!token || !decodedToken.id){
+    return response.status(401).send({
+      error: 'Invalid or missing authorization token'
+    })
+  }
   let blog = {
     title: request.body.title,
     author: request.body.author,
