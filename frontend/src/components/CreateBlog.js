@@ -26,7 +26,7 @@ const CreateBlog = ({ addBlog, style }) => {
         <div style={style}>title <input type='text' data-testid='title' onChange={event => {createBlogObject('title', event.target.value)}}></input></div>
         <div style={style}>author <input type='text' data-testid='author' onChange={event => {createBlogObject('author', event.target.value)}}></input></div>
         <div style={style}>url <input type='text' data-testid='url' onChange={event => {createBlogObject('url', event.target.value)}}></input></div>
-        <div style={style}><button type='submit'>create</button></div>
+        <div style={style}><button type='submit' data-testid='createNew'>create</button></div>
       </form>
     </div>
   )
