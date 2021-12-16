@@ -13,9 +13,9 @@ const LoginForm = ({ setUsername, setPassword, handleSubmit, style }) => {
     <div>
       <h2>login to the application</h2>
       <form onSubmit={event => handleSubmit(event)}>
-        <div style={style}>username <input type='text' onChange={event => setUsername(event.target.value)}/></div>
-        <div style={style}>password <input type='password' onChange={event => setPassword(event.target.value)}/></div>
-        <div style={style}><input type="submit" value="login" /></div>
+        <div style={style}>username <input type='text' data-testid='username-txt' onChange={event => setUsername(event.target.value)}/></div>
+        <div style={style}>password <input type='password' data-testid='password-txt' onChange={event => setPassword(event.target.value)}/></div>
+        <div style={style}><input type="submit" data-testid='submit-cred' value="login" /></div>
       </form>
     </div>
   )

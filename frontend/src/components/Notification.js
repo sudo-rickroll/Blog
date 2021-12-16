@@ -12,7 +12,7 @@ const Success = ({ message, style }) => {
     color: 'green'
   }
   return (
-    <div style={messageStyle}>
+    <div data-testid='text-notification' style={messageStyle}>
       {message.success}
     </div>
   )
@@ -29,7 +29,7 @@ const Failure = ({ message, style }) => {
     color: 'red'
   }
   return (
-    <div style={messageStyle}>
+    <div data-testid='text-notification' style={messageStyle}>
       {message.error}
     </div>
   )
