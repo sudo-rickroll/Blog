@@ -19,15 +19,16 @@ Cypress.Commands.add('login', function ({username, password}) {
 
 })
 
-Cypress.Commands.add('createBlog', function ({title, author, url}){
+Cypress.Commands.add('createBlog', function (blogObject){
     cy.request({
         url: 'http://localhost:3003/api/blogs',
         method: 'POST',
-        body: {title, author, url},
+        body: blogObject,
         headers: {
             'Authorization': `bearer ${window.localStorage.getItem('token')}`
         }
     })
+    cy.visit('http://localhost:3000')
 })
 
 describe('Blog app', function (){
@@ -75,14 +76,29 @@ describe('Blog app', function (){
                 username: 'anonymous',
                 password: 'ansdfgg'
             }
-            const blog = {
-                title: 'Blog Title',
-                author: 'Blog Author',
-                url: 'Blog URL'
+            const blog1 = {
+                title: 'Blog 1 Title',
+                author: 'Blog 1 Author',
+                url: 'Blog 1 URL',
+                likes: 5
+            }
+            const blog2 = {
+                title: 'Blog 2 Title',
+                author: 'Blog 2 Author',
+                url: 'Blog 2 URL',
+                likes: 5
+            }
+            const blog3 = {
+                title: 'Blog 3 Title',
+                author: 'Blog 3 Author',
+                url: 'Blog 3 URL',
+                likes: 6
             }
             cy.addUser(user)
             cy.login({username: user.username, password: user.password})
-            cy.createBlog(blog)
+            cy.createBlog(blog1)
+            cy.createBlog(blog2)
+            cy.createBlog(blog3)
         })
 
         it('A blog can be created', function () {
@@ -101,7 +117,6 @@ describe('Blog app', function (){
         })
 
         it('A blog can be liked', function () {
-            let defaultLikes = 0
             cy.get('div[data-testid="static-elements"]:last').as('staticElement')
             cy.get('div[data-testid="dynamic-elements"]:last').as('dynamicElement')
             cy.get('@dynamicElement').find('[data-testid="blog-likes"]').as('divLikes')
@@ -110,11 +125,22 @@ describe('Blog app', function (){
             cy.get('@dynamicElement').should('have.css', 'display', 'block')
             cy.get('@divLikes').invoke('text').then(text => {
                 expect(Number(text)).equal(0)
-                defaultLikes = Number(text)
+                let defaultLikes = Number(text)
+                cy.get('@dynamicElement').find('[data-testid="increase-likes"]').click()
+                cy.get('@divLikes').contains(defaultLikes + 1)
             })
-            cy.get('@dynamicElement').find('[data-testid="increase-likes"]').click()
-            cy.get('@divLikes').contains(defaultLikes + 1)
+            
 
+        })
+
+        it('A blog can be deleted', function (){
+            cy.get('div[data-testid="blog-container"]').then(blogs => {
+                let blogsCount = blogs.length
+                cy.get('div[data-testid="static-elements"]:last').find('[data-testid="toggle-details"]').click()
+                cy.get('div[data-testid="dynamic-elements"]:last').find('[data-testid="remove-blogs"]').click()
+                cy.on('window:confirm', () => true)
+                cy.get('div[data-testid="blog-container"]').should('have.length', blogsCount - 1)
+            })            
         })
     })
 })

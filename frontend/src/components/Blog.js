@@ -44,7 +44,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div data-testid='blog-container' style={blogStyle}>
       <div data-testid="static-elements">
         <span data-testid="blog-title" style={space}>{blog.title}</span> <span data-testid="blog-author" style={space}>{blog.author}</span> <input type="button" value={buttonLabel} onClick={toggleVisibility} data-testid="toggle-details"/>
       </div>
@@ -56,7 +56,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         <div data-testid="blog-username">
           {blog.user.username}<br/>
         </div>
-        <input type="button" onClick={removeBlog} value="remove" />
+        <input type="button" data-testid="remove-blogs" onClick={removeBlog} value="remove" />
       </div>
     </div>
   )
