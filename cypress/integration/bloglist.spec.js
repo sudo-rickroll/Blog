@@ -142,5 +142,13 @@ describe('Blog app', function (){
                 cy.get('div[data-testid="blog-container"]').should('have.length', blogsCount - 1)
             })            
         })
+
+        it.only('Blogs are rearranged in order of highest to lowest likes', function () {
+            cy.get('[data-testid="blog-likes"]').then(blogs => {
+                const likes = blogs.map((index, blog) => blog.likes)
+                const likesSorted = likes.sort((a, b) => b - a)
+                expect(likes).to.deep.eq(likesSorted)
+            })
+        })
     })
 })
