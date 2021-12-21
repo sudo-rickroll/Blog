@@ -13,6 +13,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 
 mongoose.connect(config.URL).then(() => logger.info(`Connected to ${process.env.NODE_ENV} database`)).catch(error => logger.error(error))
 
