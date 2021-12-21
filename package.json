@@ -7,8 +7,11 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "start:test": "cross-env NODE_ENV=test node index.js",
     "lint": "eslint .",
-    "lintfix": "eslint . --fix"
+    "lintfix": "eslint . --fix",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "repository": {
     "type": "git",
@@ -24,7 +27,9 @@
   },
   "homepage": "https://github.com/sudo-rickroll/Blog#readme",
   "devDependencies": {
+    "cypress": "^9.2.0",
     "eslint": "^8.0.1",
+    "eslint-plugin-cypress": "^2.12.1",
     "jest": "^27.3.1",
     "nodemon": "^2.0.14",
     "supertest": "^6.1.6"
@@ -39,7 +44,8 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^6.0.11",
-    "mongoose-unique-validator": "^2.0.3"
+    "mongoose-unique-validator": "^2.0.3",
+    "package.json": "^2.0.1"
   },
   "jest": {
     "testEnvironment": "node"

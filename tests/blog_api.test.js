@@ -99,7 +99,7 @@ describe('Blog PUT API Calls', () => {
       ...existingBlog.toJSON(),
       likes: 155
     }
-    const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).send(newBlog).expect(200)
+    const updatedBlog = await api.put(`/api/blogs/${existingBlog.id}`).set({ 'authorization': `bearer ${token}` }).send(newBlog).expect(200)
     expect(updatedBlog.body).toEqual(newBlog)
 
   })
