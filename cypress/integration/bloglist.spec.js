@@ -31,6 +31,30 @@ Cypress.Commands.add('createBlog', function (blogObject){
   cy.visit('http://localhost:3003')
 })
 
+Cypress.Commands.add('isNotInViewport', element => {
+  cy.get(element).then($el => {
+    const bottom = Cypress.$(cy.state('window')).height()
+    const rect = $el[0].getBoundingClientRect()
+
+    expect(rect.top).to.be.greaterThan(bottom)
+    expect(rect.bottom).to.be.greaterThan(bottom)
+    expect(rect.top).to.be.greaterThan(bottom)
+    expect(rect.bottom).to.be.greaterThan(bottom)
+  })
+})
+
+Cypress.Commands.add('isInViewport', element => {
+  cy.get(element).then($el => {
+    const bottom = Cypress.$(cy.state('window')).height()
+    const rect = $el[0].getBoundingClientRect()
+
+    expect(rect.top).not.to.be.greaterThan(bottom)
+    expect(rect.bottom).not.to.be.greaterThan(bottom)
+    expect(rect.top).not.to.be.greaterThan(bottom)
+    expect(rect.bottom).not.to.be.greaterThan(bottom)
+  })
+})
+
 describe('Blog app', function (){
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -39,6 +63,38 @@ describe('Blog app', function (){
 
   it('login form is shown', function () {
     cy.contains('login to the application')
+  })
+
+  describe('Register', function () {
+
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3003/api/testing/reset')
+      cy.visit('http://localhost:3003')
+      cy.get('[data-testid="register-view"]').click()
+    })
+
+    it('succeeds with proper details', function (){
+      cy.get('[data-testid="name-register"]').type('MERN')
+      cy.get('[data-testid="username-register"]').type('mern')
+      cy.get('[data-testid="password-register"]').type('mern1234')
+      cy.get('[data-testid="register-user"]').click()
+      cy.get('[data-testid="text-notification"]').contains('User registered successfully')
+      cy.get('[data-testid="form-register"]').should('not.be.visible')
+      cy.get('[data-testid="username-txt"]').type('mern')
+      cy.get('[data-testid="password-txt"]').type('mern1234')
+      cy.get('[data-testid="submit-cred"]').click()
+      cy.get('[data-testid="blogs-screen"]').should('be.visible')
+    })
+
+    it('fails with improper details', function () {
+      cy.get('[data-testid="name-register"]').type('1')
+      cy.get('[data-testid="username-register"]').type('2')
+      cy.get('[data-testid="password-register"]').type('3')
+      cy.get('[data-testid="register-user"]').click()
+      cy.get('[data-testid="text-notification"]').contains('Username and Password must be provided and both must be atleast 3 characters long')
+      cy.get('[data-testid="form-register"]').should('be.visible')
+    })
+
   })
 
 
